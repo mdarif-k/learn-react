@@ -47,14 +47,15 @@ class Navbar extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.navData);
         if(nextProps.navData) {
             nextProps.navData.map((nd, i) => {
                 nd.childTech && nd.childTech.map((ct, i) => {
                     if(ct.href.indexOf('/') !== 0) {
                         ct.href = '/'+ ct.href;
                     }
+                    return null;
                 });
+                return null;
             });
         }
     }
@@ -106,7 +107,7 @@ class Navbar extends Component {
         }
         return (
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <a className="navbar-brand" href="#">W</a>
+                <Link className="navbar-brand" to="/">W</Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>

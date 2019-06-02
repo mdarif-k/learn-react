@@ -60,6 +60,7 @@ class Blog extends Component {
                     if (ln.blogHref.indexOf('/') !== 0) {
                         ln.blogHref = '/' + ln.blogHref;
                     }
+                    return null;
                 })
             }
             this.setState({ selectedBlog: blog, leftNav: leftNav, leftNavActive: (blog && blog.blogHref ? blog.blogHref : []) });
@@ -113,7 +114,7 @@ class Blog extends Component {
 
         return (
             <div>
-                {loading ? <div class="loading">Loading&#8230;</div> : null}
+                {loading ? <div className="loading">Loading&#8230;</div> : null}
                 {blogTech}
                 {
                     blogData && blogName ? (

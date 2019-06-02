@@ -59,7 +59,7 @@ class App extends Component {
         <Navbar navData={this.state.navData}/>
         <Route path='/:handle' component={Blog} blogData={this.state.blogData}/>
         <Route exact path='/' component={Home}/>
-        {loading ? <div class="loading">Loading&#8230;</div> : null}
+        {loading ? <div className="loading">Loading&#8230;</div> : null}
         <Footer />
       </BrowserRouter>
     )
