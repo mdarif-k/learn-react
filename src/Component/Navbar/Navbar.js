@@ -5,7 +5,8 @@ const INITIAL_STATE = {
     navLink: 'nav-link dropdown-toggle',
     dropDownMenu: 'dropdown-menu',
     toggle: false,
-    toggleTechName: ''
+    toggleTechName: '',
+    toggleNavbar: false
 }
 
 class Navbar extends Component {
@@ -60,6 +61,13 @@ class Navbar extends Component {
         }
     }
 
+    toggleNavBar = () => {
+        let toggleNavbar = !this.state.toggleNavbar
+        this.setState({
+            toggleNavbar: toggleNavbar
+        })
+    }
+
     render() {
         let navList = null;
         const style = { zIndex: "1030"}
@@ -102,16 +110,18 @@ class Navbar extends Component {
                     }
                 </ul>
             )
-
-
+        }
+        let navBarActive = 'collapse navbar-collapse';
+        if(this.state.toggleNavbar) {
+            navBarActive = 'collapse navbar-collapse show'
         }
         return (
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <Link className="navbar-brand" to="/">W</Link>
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <button className="navbar-toggler" onClick={this.toggleNavBar} type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarNavDropdown">
+                <div className={navBarActive} id="navbarNavDropdown">
                     {navList}
                 </div>
             </nav>

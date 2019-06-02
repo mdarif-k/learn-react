@@ -65,6 +65,9 @@ class Blog extends Component {
             }
             this.setState({ selectedBlog: blog, leftNav: leftNav, leftNavActive: (blog && blog.blogHref ? blog.blogHref : []) });
         }
+        if(nextProps.location.pathname) {
+            console.log(nextProps.location.pathname);
+        }
         window.scroll(0, 0);
     }
 
