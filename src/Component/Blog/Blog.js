@@ -24,6 +24,7 @@ class Blog extends Component {
     listenForChange() {
         this.db.ref('blogs').on('child_added', snapshot => {
             let blog = snapshot.val();
+            blog.blogTech = blog.blogTech.toUpperCase();
             let blogData = this.state.blogData;
             blogData.push(blog);
             this.setState({ blogData: blogData }, () => {
@@ -41,7 +42,6 @@ class Blog extends Component {
     }
 
     loadBlog = (nextProps) => {
-        console.log(nextProps.location.pathname);
         if (nextProps.location.pathname === undefined || nextProps.location.pathname === '/') return;
         let blog = {};
         let leftNav = [];
