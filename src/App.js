@@ -5,7 +5,8 @@ import Navbar from './Component/Navbar/Navbar';
 import Footer from './Component/Footer/Footer';
 import Blog from './Component/Blog/Blog';
 import firebase from 'firebase';
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Home from './Component/Home/Home'
 
 const firebaseConfig = {
   apiKey: "AIzaSyCl3BW7-1JZfk-gM4F9j58G49gIoI_3Keg",
@@ -57,6 +58,7 @@ class App extends Component {
       <BrowserRouter>
         <Navbar navData={this.state.navData}/>
         <Route path='/:handle' component={Blog} blogData={this.state.blogData}/>
+        <Route exact path='/' component={Home}/>
         {loading ? <div class="loading">Loading&#8230;</div> : null}
         <Footer />
       </BrowserRouter>

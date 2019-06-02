@@ -18,7 +18,7 @@ class Blog extends Component {
 
     componentDidMount() {
         this.db = firebase.database();
-        this.listenForChange()
+        this.listenForChange();
     }
 
     listenForChange() {
@@ -26,7 +26,9 @@ class Blog extends Component {
             let blog = snapshot.val();
             let blogData = this.state.blogData;
             blogData.push(blog);
-            this.setState({ blogData: blogData });
+            this.setState({ blogData: blogData }, () => {
+                this.loadBlog(this.props);
+            });
         });
     }
 
@@ -35,6 +37,11 @@ class Blog extends Component {
 
 
     componentWillReceiveProps(nextProps) {
+        this.loadBlog(nextProps);
+    }
+
+    loadBlog = (nextProps) => {
+        console.log(nextProps.location.pathname);
         if (nextProps.location.pathname === undefined || nextProps.location.pathname === '/') return;
         let blog = {};
         let leftNav = [];
