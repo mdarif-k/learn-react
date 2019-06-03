@@ -17,10 +17,13 @@ npm install --save bootstrap
 
  - #### Configure Firebase
  #
+ First of all we need to inport firebase package into the App.js file.
+
  ```js
  import firebase from 'firebase';
  ```
- First of all we need to inport firebase package into the App.js file
+
+Then we need to initialize the firebase app in App.js file.
 
  ```js
 const firebaseConfig = {
@@ -35,6 +38,26 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
  ```
 
- Then we need to initialize the firebase app in App.js file.
+ - #### On load component create operation + on post/added add operation
+ #
+
+The below function will work like subcription when ever any child we will add that time it automatic call the database ref. This below function will get the data once our component will call this function first time after that it will call on every add child.
+ ```js
+ this.db.ref('notes').on('child_added', snapshot => {
+    let note = {
+        id: snapshot.key,
+        title: snapshot.val().title,
+        note: snapshot.val().note
+    }
+    let notes = this.state.notes;
+    notes.push(note);
+    this.setState({
+        notes: notes
+    })
+});
+ ```
+
+
+ 
 
 
