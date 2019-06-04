@@ -85,7 +85,7 @@ class NotesForm extends Component {
                         willReceivePropsChecks: false
                     }, () => {
                         this.props.updateNoteHandler(dataToBeUpdate);
-                        this.setState({willReceivePropsChecks: true})
+                        this.setState({willReceivePropsChecks: true, editFormActive: false, noteForm: {title: '', note: ''}})
                     })
                 });
             } else if (this.state.noteForm.title === '') {
