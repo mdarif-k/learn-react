@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import firebase from 'firebase';
 import Header from './Component/Header/Header';
@@ -17,9 +17,27 @@ const firebaseConfig = {
 }
 firebase.initializeApp(firebaseConfig);
 
+const INITIAL_STATE = {
+  defaultFormValue: {},
+  dataToBeUpdate: {}
+}
+
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = INITIAL_STATE;
+  }
+
+  editNoteHandler = (note) => {
+    this.setState({
+      defaultFormValue: note
+    });
+  }
+
+  updateNoteHandler = (updatedData) => {
+    this.setState({
+      dataToBeUpdate: updatedData
+    });
   }
 
   render() {
@@ -27,8 +45,14 @@ class App extends Component {
       <section>
         <Header />
         <div className="container border mT20">
-          <NotesForm />
-          <DisplayNotes />
+          <NotesForm
+            initiateForm={this.state.defaultFormValue}
+            updateNoteHandler={(updatedData) => this.updateNoteHandler(updatedData)}
+          />
+          <DisplayNotes
+            editNoteHandler={(note) => this.editNoteHandler(note)}
+            dataToBeUpdate={this.state.dataToBeUpdate}
+          />
         </div>
       </section>
     )

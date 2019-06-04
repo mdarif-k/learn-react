@@ -38,7 +38,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
  ```
 
- - #### On load component create operation + on post/added add operation
+ - #### child_added (On load component create operation + on post/added add operation)
  #
 
 The below function will work like subcription when ever any child we will add that time it automatic call the database ref. This below function will get the data once our component will call this function first time after that it will call on every add child.
@@ -57,7 +57,61 @@ The below function will work like subcription when ever any child we will add th
 });
  ```
 
+ - #### child_removed 
+ #
 
+child_removed is just like subscription it will always listen the delete/remove child and will call the callBack function accordingly.
+
+ ```js
+ this.db.ref('notes').on('child_removed', snapshot => {
+    let notes = this.state.notes;
+    notes = notes.filter(note => note.id !== snapshot.key);
+    this.setState({
+        notes: notes
+    });
+});
+ ```
+
+- #### push (create function)
+#
+
+```js
+firebase.database().ref('notes').push({
+    title: this.state.noteForm.title,
+    note: this.state.noteForm.note
+}).then((res) => {
+    this.setState(INITIAL_STATE);
+    this.setState({success: 'Note added successfully!'});
+});
+```
+
+
+- #### update (Update function)
+#
+
+```js
+ this.db.ref('notes' + '/' + this.state.editId).update({
+    title: this.state.noteForm.title,
+    note: this.state.noteForm.note
+}, () => {
+    const dataToBeUpdate = {
+        editId: this.state.editId,
+        title: this.state.noteForm.title,
+        note: this.state.noteForm.note
+    }
+    console.log(this.state.noteForm.title);
+    this.setState({
+        noteForm: {
+            title: this.state.noteForm.title,
+            note: this.state.noteForm.note
+        },
+        willReceivePropsChecks: false
+    }, () => {
+        this.props.updateNoteHandler(dataToBeUpdate);
+        this.setState({willReceivePropsChecks: true})
+    })
+});
+```
  
 
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import { nodeInternals } from 'stack-utils';
 
 const INITIAL_STATE = {
     notes: []
@@ -37,17 +36,48 @@ class DisplayNotes extends Component {
             this.setState({
                 notes: notes
             })
-        })
+        });
     }
 
     removeNoteHandler = (id) => {
         this.db.ref('notes').child(id).remove();
     }
 
+    editClicked = (id) => {
+        window.scroll(0, 0);
+        this.db.ref('notes' + '/' + id).once('value').then(val => {
+            let note = { title: val.val().title, note: val.val().note, id: id };
+            this.props.editNoteHandler(note);
+        })
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let notes = this.state.notes;
+        if (nextProps.dataToBeUpdate) {
+            notes.map((note) => {
+                if (note.id === nextProps.dataToBeUpdate.editId) {
+                    note.title = nextProps.dataToBeUpdate.title;
+                    note.note = nextProps.dataToBeUpdate.note;
+                }
+                return;
+            })
+            this.setState({
+                notes: notes
+            })
+        }
+    }
+
+
+
+    editNoteHandler = (dataToBeUpdate) => {
+
+    }
+
+
     render() {
         let cardStyle = { width: '18rem', display: 'inline-block' };
         let notes = null;
-        if(this.state.notes.length > 0) {
+        if (this.state.notes.length > 0) {
             notes = this.state.notes.map((n) => {
                 return (
                     <div className="card m10 p10 mT20" style={cardStyle} key={n.id}>
@@ -55,6 +85,7 @@ class DisplayNotes extends Component {
                             <h5 className="card-title">{n.title}</h5>
                             <p className="card-text">{n.note}</p>
                             <button className="btn btn-danger" onClick={() => this.removeNoteHandler(n.id)}>Delete</button>
+                            <button className="btn btn-danger" onClick={() => this.editClicked(n.id)}>Edit</button>
                         </div>
                     </div>
                 )
