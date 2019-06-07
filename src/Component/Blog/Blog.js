@@ -22,13 +22,15 @@ class Blog extends Component {
     }
 
     listenForChange() {
-        this.db.ref('blogs').on('child_added', snapshot => {
-            let blog = snapshot.val();
-            blog.blogTech = blog.blogTech.toUpperCase();
-            let blogData = this.state.blogData;
-            blogData.push(blog);
-            this.setState({ blogData: blogData }, () => {
-                this.loadBlog(this.props);
+        this.setState({ blogData: [] }, () => {
+            this.db.ref('blogs').on('child_added', snapshot => {
+                let blog = snapshot.val();
+                blog.blogTech = blog.blogTech.toUpperCase();
+                let blogData = this.state.blogData;
+                blogData.push(blog);
+                this.setState({ blogData: blogData }, () => {
+                    this.loadBlog(this.props);
+                });
             });
         });
     }
@@ -64,9 +66,6 @@ class Blog extends Component {
                 })
             }
             this.setState({ selectedBlog: blog, leftNav: leftNav, leftNavActive: (blog && blog.blogHref ? blog.blogHref : []) });
-        }
-        if(nextProps.location.pathname) {
-            console.log(nextProps.location.pathname);
         }
         window.scroll(0, 0);
     }
@@ -113,6 +112,10 @@ class Blog extends Component {
 
         if (this.state.selectedBlog && this.state.selectedBlog.blogData) {
             blogData = <Template html={this.state.selectedBlog.blogData} />;
+        }
+
+        if(loading) {
+            loading = false;
         }
 
         return (

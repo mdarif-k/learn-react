@@ -25,7 +25,6 @@ const INITIAL_STATE = {
   navData: []
 }
 
-
 class App extends Component {
 
   constructor(props) {
@@ -36,7 +35,6 @@ class App extends Component {
   componentDidMount() {
     this.db = firebase.database();
     this.listenForChange();
-    
   }
 
   listenForChange = () => {
@@ -44,23 +42,21 @@ class App extends Component {
       let nav = snapshot.val();
       let navData = this.state.navData;
       navData.push(nav);
-      this.setState({navData: navData});
+      this.setState({ navData: navData });
     });
-    
-
   }
 
   render() {
     let loading = true;
-    if(this.state.navData.length > 0) {
+    if (this.state.navData.length > 0) {
       loading = false
     }
     return (
       <BrowserRouter>
-        <Navbar navData={this.state.navData}/>
-        <Route path='/:handle' component={Blog} blogData={this.state.blogData}/>
-        <Route exact path='/' component={Home}/>
-        <Route exact path='/admin' component={Admin}/>
+        <Navbar navData={this.state.navData} />
+        <Route path='/:handle' component={Blog} blogData={this.state.blogData} />
+        <Route exact path='/' component={Home} />
+        <Route exact path='/admin' component={Admin} />
         {loading ? <div className="loading">Loading&#8230;</div> : null}
         <Footer />
       </BrowserRouter>

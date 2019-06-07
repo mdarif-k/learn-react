@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Modal } from 'react-bootstrap';
 
 const INITIAL_STATE = {
     navLink: 'nav-link dropdown-toggle',
     dropDownMenu: 'dropdown-menu',
     toggle: false,
     toggleTechName: '',
-    toggleNavbar: false
+    toggleNavbar: false,
+    show: false
 }
 
 class Navbar extends Component {
@@ -18,6 +20,14 @@ class Navbar extends Component {
 
     componentDidMount() {
     }
+
+    handleShow = () => {
+        this.setState({ show: true });
+    };
+
+    handleHide = () => {
+        this.setState({ show: false });
+    };
 
     toggle = (name) => {
         let toggle = !this.state.toggle;
@@ -48,11 +58,11 @@ class Navbar extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.navData) {
+        if (nextProps.navData) {
             nextProps.navData.map((nd, i) => {
                 nd.childTech && nd.childTech.map((ct, i) => {
-                    if(ct.href.indexOf('/') !== 0) {
-                        ct.href = '/'+ ct.href;
+                    if (ct.href.indexOf('/') !== 0) {
+                        ct.href = '/' + ct.href;
                     }
                     return null;
                 });
@@ -68,9 +78,13 @@ class Navbar extends Component {
         })
     }
 
+    newBlogHandler = () => {
+
+    }
+
     render() {
         let navList = null;
-        const style = { zIndex: "1030"}
+        const style = { zIndex: "1030" }
         if (this.props.navData.length > 0) {
             navList = (
                 <ul style={style} className="navbar-nav">
@@ -79,8 +93,8 @@ class Navbar extends Component {
                             return (
                                 nav.childTech
                                     ? (
-                                        <li  key={i} className="nav-item dropdown">
-                                            <span key={i} onClick={this.toggle.bind(this, nav.nav.techName)}  className={this.state.navLink} id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <li key={i} className="nav-item dropdown">
+                                            <span key={i} onClick={this.toggle.bind(this, nav.nav.techName)} className={this.state.navLink} id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 {nav.nav.techName}
                                             </span>
                                             {
@@ -108,11 +122,14 @@ class Navbar extends Component {
                             )
                         })
                     }
+                    <li onClick={() => this.setState({ show: true })} className="nav-item active" >
+                        <Link className="nav-link" to='/'>New Blog <span className="sr-only">(current)</span></Link>
+                    </li>
                 </ul>
             )
         }
         let navBarActive = 'collapse navbar-collapse';
-        if(this.state.toggleNavbar) {
+        if (this.state.toggleNavbar) {
             navBarActive = 'collapse navbar-collapse show'
         }
         return (
@@ -124,6 +141,75 @@ class Navbar extends Component {
                 <div className={navBarActive} id="navbarNavDropdown">
                     {navList}
                 </div>
+                <Modal
+                    size="lg"
+                    show={this.state.show}
+                    onHide={this.handleHide}
+                    aria-labelledby="example-modal-sizes-title-lg"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="example-modal-sizes-title-lg">
+                            Add New Blog
+                    </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <form>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label>Sort</label>
+                                        <input formControlName="sort" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Tech Name</label>
+                                        <input formControlName="blogTech" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Blog href</label>
+                                        <input formControlName="blogHref" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input formControlName="blogTitle" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Desc</label>
+                                        <input formControlName="blogDesc" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Blog Name</label>
+                                        <input formControlName="blogName" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Keywords</label>
+                                        <input formControlName="blogKeyword" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Blog Data</label>
+                                <textarea formControlName="blogData" class="form-control" rows="10"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success">Add</button>
+                            </div>
+                        </form>
+                    </Modal.Body>
+                </Modal>
             </nav>
         )
     }
