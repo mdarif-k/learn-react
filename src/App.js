@@ -8,6 +8,7 @@ import firebase from 'firebase';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './Component/Home/Home';
 import Admin from './Component/Admin/Admin';
+import Loader from './Component/UI/Common/Loader';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCl3BW7-1JZfk-gM4F9j58G49gIoI_3Keg",
@@ -57,7 +58,7 @@ class App extends Component {
         <Route path='/:handle' component={Blog} blogData={this.state.blogData} />
         <Route exact path='/' component={Home} />
         <Route exact path='/admin' component={Admin} />
-        {loading ? <div className="loading">Loading&#8230;</div> : null}
+        <Loader loading={loading} />
         <Footer />
       </BrowserRouter>
     )

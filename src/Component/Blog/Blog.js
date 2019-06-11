@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import Template from '../UI/Common/Template';
 import { Link } from 'react-router-dom';
+import Loader from '../UI/Common/Loader';
 
 const INITIAL_STATE = {
     blogData: [],
     leftNav: [],
-    selectedBlog: {}
+    selectedBlog: {},
+    loading: true
 }
 
 class Blog extends Component {
@@ -44,6 +46,7 @@ class Blog extends Component {
     }
 
     loadBlog = (nextProps) => {
+        this.setState({loading: true})
         if (nextProps.location.pathname === undefined || nextProps.location.pathname === '/') return;
         let blog = {};
         let leftNav = [];
@@ -65,7 +68,7 @@ class Blog extends Component {
                     return null;
                 })
             }
-            this.setState({ selectedBlog: blog, leftNav: leftNav, leftNavActive: (blog && blog.blogHref ? blog.blogHref : []) });
+            this.setState({ selectedBlog: blog, leftNav: leftNav, leftNavActive: (blog && blog.blogHref ? blog.blogHref : []), loading: false });
         }
         window.scroll(0, 0);
     }
@@ -76,7 +79,6 @@ class Blog extends Component {
         let blogTech = null;
         let blogName = null;
         let blogData = null;
-        let loading = true;
         if (this.state.leftNav.length > 0) {
             leftNav = this.state.leftNav.map((nav, i) => {
                 if (nav.blogHref === this.state.leftNavActive) {
@@ -98,7 +100,6 @@ class Blog extends Component {
         }
 
         if (this.state.selectedBlog && this.state.selectedBlog.blogTech) {
-            loading = false;
             blogTech = (
                 <div className="card text-white bg-info text-center bor-rad">
                     <h2 className="card-header bor-rad">{this.state.selectedBlog.blogTech}</h2>
@@ -114,13 +115,10 @@ class Blog extends Component {
             blogData = <Template html={this.state.selectedBlog.blogData} />;
         }
 
-        if(loading) {
-            loading = false;
-        }
 
         return (
             <div>
-                {loading ? <div className="loading">Loading&#8230;</div> : null}
+                <Loader loading={this.state.loading} />
                 {blogTech}
                 {
                     blogData && blogName ? (
