@@ -23,7 +23,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const INITIAL_STATE = {
-  navData: []
+  navData: [],
+  blogEditId: null
 }
 
 class App extends Component {
@@ -47,6 +48,13 @@ class App extends Component {
     });
   }
 
+  editBlogHandler = (id) => {
+    this.setState({
+      blogEditId: id
+    });
+    console.log(id);
+  }
+
   render() {
     let loading = true;
     if (this.state.navData.length > 0) {
@@ -54,8 +62,12 @@ class App extends Component {
     }
     return (
       <BrowserRouter>
-        <Navbar navData={this.state.navData} />
-        <Route path='/:handle' component={Blog} blogData={this.state.blogData} />
+        <Navbar navData={this.state.navData} 
+                blogEditId={this.state.blogEditId} />
+        <Route  path='/:handle'
+                component={(props) => <Blog {...props} blogData={this.state.blogData}
+                edit={(id) => this.editBlogHandler(id)}/>}
+                />
         <Route exact path='/' component={Home} />
         <Route exact path='/admin' component={Admin} />
         <Loader loading={loading} />

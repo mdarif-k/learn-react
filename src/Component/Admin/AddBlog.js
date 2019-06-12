@@ -37,7 +37,7 @@ const INITIAL_STATE = {
             value: '',
             labelfor: "Blog Href"
         },
-        title: {
+        blogTitle: {
             elementType: 'input',
             elementConfig: {
                 type: 'text',
@@ -47,7 +47,7 @@ const INITIAL_STATE = {
             value: '',
             labelfor: "Title"
         },
-        desc: {
+        blogDesc: {
             elementType: 'input',
             elementConfig: {
                 type: 'text',
@@ -67,7 +67,7 @@ const INITIAL_STATE = {
             value: '',
             labelfor: "Blog Name"
         },
-        keywords: {
+        blogKeyword: {
             elementType: 'input',
             elementConfig: {
                 type: 'text',
@@ -89,7 +89,9 @@ const INITIAL_STATE = {
             labelfor: "Blog Data"
         },
     },
-    loading: false
+    loading: false,
+    editMode: false,
+    editId: null
 }
 
 class AddBlog extends Component {
@@ -108,7 +110,7 @@ class AddBlog extends Component {
     };
 
     handleHide = () => {
-        this.setState({ show: false });
+        this.setState(INITIAL_STATE);
     };
 
     componentWillReceiveProps(nextProps) {
@@ -117,18 +119,103 @@ class AddBlog extends Component {
                 show: true
             })
         }
+        if (nextProps.blogEditId) {
+            this.setState({
+                editId: nextProps.blogEditId
+            })
+            this.db.ref('blogs/' + nextProps.blogEditId).once('value').then(blog => {
+                if (blog.val().blogData) {
+                    let value = blog.val().blogData;
+                    this.setState({
+                        show: true,
+                        editMode: true
+                    }, () => {
+                        this.onChangeHandler(value, 'blogData');
+                    })
+                }
+                if (blog.val().blogTech) {
+                    let value = blog.val().blogTech;
+                    this.setState({
+                        show: true,
+                        editMode: true
+                    }, () => {
+                        this.onChangeHandler(value, 'blogTech');
+                    })
+                }
+                if (blog.val().blogHref) {
+                    let value = blog.val().blogHref;
+                    this.setState({
+                        show: true,
+                        editMode: true
+                    }, () => {
+                        this.onChangeHandler(value, 'blogHref');
+                    })
+                }
+                if (blog.val().blogName) {
+                    let value = blog.val().blogName;
+                    this.setState({
+                        show: true,
+                        editMode: true
+                    }, () => {
+                        this.onChangeHandler(value, 'blogName');
+                    })
+                }
+                if (blog.val().blogKeyword) {
+                    let value = blog.val().blogKeyword;
+                    this.setState({
+                        show: true,
+                        editMode: true
+                    }, () => {
+                        this.onChangeHandler(value, 'blogKeyword');
+                    })
+                }
+                if (blog.val().sort) {
+                    let value = blog.val().sort;
+                    this.setState({
+                        show: true,
+                        editMode: true
+                    }, () => {
+                        this.onChangeHandler(value, 'sort');
+                    })
+                }
+                if (blog.val().blogTitle) {
+                    let value = blog.val().blogTitle;
+                    this.setState({
+                        show: true,
+                        editMode: true
+                    }, () => {
+                        this.onChangeHandler(value, 'blogTitle');
+                    })
+                }
+                if (blog.val().blogDesc) {
+                    let value = blog.val().blogDesc;
+                    this.setState({
+                        show: true,
+                        editMode: true
+                    }, () => {
+                        this.onChangeHandler(value, 'blogDesc');
+                    })
+                }
+            });
+        }
     }
 
     onSubmitHandler = (event) => {
         event.preventDefault();
-        this.setState({loading: true});
+        this.setState({ loading: true });
         const formData = {};
-        for(let formElementIdentifier in this.state.addBlogForm) {
+        for (let formElementIdentifier in this.state.addBlogForm) {
             formData[formElementIdentifier] = this.state.addBlogForm[formElementIdentifier].value;
         }
-        this.db.ref('blogs').push(formData).then(() => {
-            this.setState({loading: false});
-        });
+        if(!this.state.editMode) {
+            this.db.ref('blogs').push(formData).then(() => {
+                this.setState({ loading: false });
+            });
+        } else {
+            this.db.ref('blogs/'+this.state.editId).update(formData).then(() => {
+                this.setState({ loading: false, editId: null, editMode: false });
+            });
+        }
     }
 
     onChangeHandler = (event, id) => {
@@ -138,7 +225,11 @@ class AddBlog extends Component {
         const updatedFormElement = {
             ...updatedAddBlogForm[id]
         }
-        updatedFormElement.value = event.target.value;
+        if(event && event.target && event.target.value) {
+            updatedFormElement.value = event.target.value;
+        } else {
+            updatedFormElement.value = event;
+        }
         updatedAddBlogForm[id] = updatedFormElement;
         this.setState({
             addBlogForm: updatedAddBlogForm
@@ -188,21 +279,21 @@ class AddBlog extends Component {
                                 </div>
                                 <div className="col-sm-4">
                                     <Input
-                                        elementType={this.state.addBlogForm.title.elementType}
-                                        elementConfig={this.state.addBlogForm.title.elementConfig}
-                                        labelFor={this.state.addBlogForm.title.labelfor}
-                                        value={this.state.addBlogForm.title.value}
-                                        changed={(event) => this.onChangeHandler(event, 'title')} />
+                                        elementType={this.state.addBlogForm.blogTitle.elementType}
+                                        elementConfig={this.state.addBlogForm.blogTitle.elementConfig}
+                                        labelFor={this.state.addBlogForm.blogTitle.labelfor}
+                                        value={this.state.addBlogForm.blogTitle.value}
+                                        changed={(event) => this.onChangeHandler(event, 'blogTitle')} />
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col-sm-4">
                                     <Input
-                                        elementType={this.state.addBlogForm.desc.elementType}
-                                        elementConfig={this.state.addBlogForm.desc.elementConfig}
-                                        labelFor={this.state.addBlogForm.desc.labelfor}
-                                        value={this.state.addBlogForm.desc.value}
-                                        changed={(event) => this.onChangeHandler(event, 'desc')} />
+                                        elementType={this.state.addBlogForm.blogDesc.elementType}
+                                        elementConfig={this.state.addBlogForm.blogDesc.elementConfig}
+                                        labelFor={this.state.addBlogForm.blogDesc.labelfor}
+                                        value={this.state.addBlogForm.blogDesc.value}
+                                        changed={(event) => this.onChangeHandler(event, 'blogDesc')} />
                                 </div>
                                 <div className="col-sm-4">
                                     <Input
@@ -214,11 +305,11 @@ class AddBlog extends Component {
                                 </div>
                                 <div className="col-sm-4">
                                     <Input
-                                        elementType={this.state.addBlogForm.keywords.elementType}
-                                        elementConfig={this.state.addBlogForm.keywords.elementConfig}
-                                        labelFor={this.state.addBlogForm.keywords.labelfor}
-                                        value={this.state.addBlogForm.keywords.value}
-                                        changed={(event) => this.onChangeHandler(event, 'keywords')} />
+                                        elementType={this.state.addBlogForm.blogKeyword.elementType}
+                                        elementConfig={this.state.addBlogForm.blogKeyword.elementConfig}
+                                        labelFor={this.state.addBlogForm.blogKeyword.labelfor}
+                                        value={this.state.addBlogForm.blogKeyword.value}
+                                        changed={(event) => this.onChangeHandler(event, 'blogKeyword')} />
                                 </div>
                             </div>
                             <Input
@@ -228,12 +319,12 @@ class AddBlog extends Component {
                                 value={this.state.addBlogForm.blogData.value}
                                 changed={(event) => this.onChangeHandler(event, 'blogData')} />
                             <div className="form-group">
-                                <button type="submit" className="btn btn-success">Add</button>
+                                <button type="submit" className="btn btn-success">{this.state.editMode ? 'EDIT' : 'ADD'}</button>
                             </div>
                         </form>
                     </Modal.Body>
                 </Modal>
-                <Loader loading={this.state.loading}/>
+                <Loader loading={this.state.loading} />
             </div>
         )
     }

@@ -8,7 +8,8 @@ const INITIAL_STATE = {
     blogData: [],
     leftNav: [],
     selectedBlog: {},
-    loading: true
+    loading: true,
+    blogEditId: null
 }
 
 class Blog extends Component {
@@ -21,12 +22,14 @@ class Blog extends Component {
     componentDidMount() {
         this.db = firebase.database();
         this.listenForChange();
+        this.admin = JSON.parse(localStorage.getItem('admin'));
     }
 
     listenForChange() {
         this.setState({ blogData: [] }, () => {
             this.db.ref('blogs').on('child_added', snapshot => {
                 let blog = snapshot.val();
+                blog.blogId = snapshot.key;
                 blog.blogTech = blog.blogTech.toUpperCase();
                 let blogData = this.state.blogData;
                 blogData.push(blog);
@@ -73,6 +76,11 @@ class Blog extends Component {
         window.scroll(0, 0);
     }
 
+    editBlogHandler = (id) => {
+        console.log(id);
+        this.props.edit(id);
+    }
+
     render() {
         let leftNav;
         let activeStyle = null;
@@ -108,7 +116,7 @@ class Blog extends Component {
         }
 
         if (this.state.selectedBlog && this.state.selectedBlog.blogName) {
-            blogName = <h4 className="card-header text-success">{this.state.selectedBlog.blogName}</h4>
+            blogName = <h4 className="card-header text-success">{this.state.selectedBlog.blogName} {this.admin ? <span><button className="btn btn-primary" onClick={() => this.editBlogHandler(this.state.selectedBlog.blogId)}>Edit</button></span> : null}</h4>
         }
 
         if (this.state.selectedBlog && this.state.selectedBlog.blogData) {
@@ -141,6 +149,10 @@ class Blog extends Component {
                 }
             </div>
         )
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 }
 

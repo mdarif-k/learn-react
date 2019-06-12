@@ -8,7 +8,8 @@ const INITIAL_STATE = {
     toggle: false,
     toggleTechName: '',
     toggleNavbar: false,
-    addBlog: false
+    addBlog: false,
+    blogEditId: null
 }
 
 class Navbar extends Component {
@@ -64,6 +65,9 @@ class Navbar extends Component {
                 });
                 return null;
             });
+        }
+        if(nextProps.blogEditId) {
+            this.setState({blogEditId: nextProps.blogEditId})
         }
     }
 
@@ -151,7 +155,7 @@ class Navbar extends Component {
                 <div className={navBarActive} id="navbarNavDropdown">
                     {navList}
                 </div>
-                <AddBlog show={this.state.addBlog}/>
+                <AddBlog show={this.state.addBlog} blogEditId={this.state.blogEditId}/>
             </nav>
         )
     }
