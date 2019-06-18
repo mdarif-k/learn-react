@@ -207,13 +207,13 @@ class AddBlog extends Component {
         for (let formElementIdentifier in this.state.addBlogForm) {
             formData[formElementIdentifier] = this.state.addBlogForm[formElementIdentifier].value;
         }
-        if(!this.state.editMode) {
+        if (!this.state.editMode) {
             this.db.ref('blogs').push(formData).then(() => {
-                this.setState({ loading: false });
+                this.setState(INITIAL_STATE);
             });
         } else {
-            this.db.ref('blogs/'+this.state.editId).update(formData).then(() => {
-                this.setState({ loading: false, editId: null, editMode: false });
+            this.db.ref('blogs/' + this.state.editId).update(formData).then(() => {
+                this.setState(INITIAL_STATE);
             });
         }
     }
@@ -225,7 +225,7 @@ class AddBlog extends Component {
         const updatedFormElement = {
             ...updatedAddBlogForm[id]
         }
-        if(event && event.target && event.target.value) {
+        if (event && event.target && event.target.value) {
             updatedFormElement.value = event.target.value;
         } else {
             updatedFormElement.value = event;
@@ -247,8 +247,8 @@ class AddBlog extends Component {
                 >
                     <Modal.Header closeButton>
                         <Modal.Title id="example-modal-sizes-title-lg">
-                            Add New Blog
-                    </Modal.Title>
+                            {this.state.editId ? 'Edit Blog' : 'Add New Blog'}
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <form onSubmit={this.onSubmitHandler}>

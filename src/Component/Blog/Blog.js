@@ -40,16 +40,12 @@ class Blog extends Component {
         });
     }
 
-    componentDidUpdate() {
-    }
-
-
     componentWillReceiveProps(nextProps) {
         this.loadBlog(nextProps);
     }
 
     loadBlog = (nextProps) => {
-        this.setState({loading: true})
+        this.setState({ loading: true })
         if (nextProps.location.pathname === undefined || nextProps.location.pathname === '/') return;
         let blog = {};
         let leftNav = [];
@@ -77,7 +73,6 @@ class Blog extends Component {
     }
 
     editBlogHandler = (id) => {
-        console.log(id);
         this.props.edit(id);
     }
 
@@ -149,10 +144,6 @@ class Blog extends Component {
                 }
             </div>
         )
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
     }
 }
 

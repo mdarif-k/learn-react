@@ -52,7 +52,6 @@ class App extends Component {
     this.setState({
       blogEditId: id
     });
-    console.log(id);
   }
 
   render() {
@@ -62,12 +61,11 @@ class App extends Component {
     }
     return (
       <BrowserRouter>
-        <Navbar navData={this.state.navData} 
-                blogEditId={this.state.blogEditId} />
-        <Route  path='/:handle'
-                component={(props) => <Blog {...props} blogData={this.state.blogData}
-                edit={(id) => this.editBlogHandler(id)}/>}
-                />
+        <Navbar navData={this.state.navData}
+          blogEditId={this.state.blogEditId} />
+        <Route path='/:handle'
+          component={(props) => <Blog {...props} blogData={this.state.blogData}
+          edit={(id) => this.editBlogHandler(id)} />} />
         <Route exact path='/' component={Home} />
         <Route exact path='/admin' component={Admin} />
         <Loader loading={loading} />

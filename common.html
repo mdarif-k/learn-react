@@ -1,0 +1,48 @@
+<div class="card-body text-info">
+    <div class="card mb-3">
+        <div class="card-header text-primary">
+            Creating a custom Dynamic Input Component
+        </div>
+        <div class="card-body">
+            <pre class="prettyprint prettyprinted">
+                <xmp>
+import React from 'react';
+
+const input = (props) => {
+    let inputElement = null;
+    switch(props.elementType){
+        case('input'):
+            inputElement = <input 
+                className="form-control" 
+                {...props.elementConfig} 
+                value={props.value} 
+                onChange={props.changed}/>
+            break;
+        case('textarea'):
+            inputElement = <textarea 
+            className="form-control" 
+            {...props.elementConfig}
+            value={props.value} 
+            onChange={props.changed} />
+            break;
+        default:
+            inputElement = <input 
+            className="form-control" 
+            {...props.elementConfig}
+            value={props.value}
+            onChange={props.changed}  />
+    }
+    return (
+        <div className="form-group">
+            <label htmlFor={props.labelFor}>{props.labelFor}</label>
+            {inputElement}
+        </div>
+    )
+}
+
+export default input;        
+                </xmp>       
+            </pre>
+        </div>
+    </div>
+</div>

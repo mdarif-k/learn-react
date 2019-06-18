@@ -31,7 +31,8 @@ class Navbar extends Component {
                 dropDownMenu: 'dropdown-menu show',
                 toggle: true,
                 toggleTechName: name,
-                addBlog: false
+                addBlog: false,
+                blogEditId: null
             })
         } else {
             this.setState({
@@ -39,10 +40,10 @@ class Navbar extends Component {
                 dropDownMenu: 'dropdown-menu',
                 toggle: false,
                 toggleTechName: name,
-                addBlog: false
+                addBlog: false,
+                blogEditId: null
             })
         }
-
     }
 
     resetToggleHandler = () => {
@@ -50,7 +51,8 @@ class Navbar extends Component {
             navLink: 'nav-link dropdown-toggle',
             dropDownMenu: 'dropdown-menu',
             toggle: false,
-            addBlog: false
+            addBlog: false,
+            blogEditId: null
         });
     }
 
@@ -78,14 +80,11 @@ class Navbar extends Component {
         })
     }
 
-    newBlogHandler = () => {
-
-    }
-
     openModal = (type) => {
         if(type === 'ADD') {
             this.setState({
-                addBlog: true
+                addBlog: true,
+                blogEditId: null
             });
         }
     }
@@ -138,7 +137,6 @@ class Navbar extends Component {
                             :
                             null
                     }
-                    
                 </ul>
             )
         }
