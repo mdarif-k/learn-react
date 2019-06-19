@@ -28,6 +28,7 @@ const App = () => {
   const onSubmitSearch = e => {
     e.preventDefault();
     setQuery(search);
+    setSearch('');
   }
 
   return (
