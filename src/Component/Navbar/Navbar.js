@@ -130,7 +130,7 @@ class Navbar extends Component {
                         })
                     }
                     {
-                        this.admin == true ? 
+                        this.admin === true ? 
                             <li onClick={() => this.openModal('ADD')} className="nav-item active" >
                                 <Link className="nav-link" to='/'>New Blog <span className="sr-only">(current)</span></Link>
                             </li>

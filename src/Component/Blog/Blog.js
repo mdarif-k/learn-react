@@ -9,7 +9,9 @@ const INITIAL_STATE = {
     leftNav: [],
     selectedBlog: {},
     loading: true,
-    blogEditId: null
+    blogEditId: null,
+    searchValue: '',
+    searchedBlogs: []
 }
 
 class Blog extends Component {
@@ -76,6 +78,26 @@ class Blog extends Component {
         this.props.edit(id);
     }
 
+    changeSearch = e => {
+        this.setState({
+            searchValue: e.target.value
+        }, () => {
+            if (this.state.searchValue === '' || this.state.searchValue.length < 3) {
+                this.setState({
+                    searchedBlogs: []
+                });
+                return;
+            };
+            let data = this.state.blogData.filter((b) => {
+                return b.blogData.toUpperCase().indexOf(this.state.searchValue.toUpperCase()) > -1;
+            });
+            this.setState({
+                searchedBlogs: data
+            });
+        });
+
+    }
+
     render() {
         let leftNav;
         let activeStyle = null;
@@ -117,11 +139,32 @@ class Blog extends Component {
         if (this.state.selectedBlog && this.state.selectedBlog.blogData) {
             blogData = <Template html={this.state.selectedBlog.blogData} />;
         }
+        let searchedBlogs = [];
+        let searchInputStyle = { margin: '0 auto', width: '50%', marginTop: '15px', marginBottom: '15px' }
+        let searchStyle = { margin: '0 auto', width: '50%', marginBottom: '15px' }
+        if (this.state.searchedBlogs.length > 0) {
+            searchedBlogs = (
+                <ul class="list-group container" style={searchStyle}>
+                    {
+                        this.state.searchedBlogs.map((b) => {
+                            return <Link class="list-group-item" to={b.blogHref}>{b.blogName}</Link>
+                        })
+                    }
+                </ul>
+            )
+        }
 
 
         return (
             <div>
                 <Loader loading={this.state.loading} />
+
+                <div className="form-group" style={searchInputStyle}>
+                    <input type="text" className="form-control" id="Search" placeholder="Search" value={this.state.searchValue} onChange={this.changeSearch} />
+                </div>
+
+                {searchedBlogs}
+
                 {blogTech}
                 {
                     blogData && blogName ? (
